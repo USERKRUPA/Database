@@ -1,0 +1,53 @@
+Assignment No. 2
+
+Create a database named college 
+	mysql> create database college;
+	Query OK, 1 row affected (0.03 sec)
+
+Create a table name student in college database with following structure roll,name,class,marks,age with respective datatypes. 
+	mysql> use college
+	Database changed
+	mysql> create table student(roll int, name varchar(15), class varchar(5), marks float, age int);
+	Query OK, 0 rows affected (0.09 sec)
+
+Insert at least 5 rows in the table. 
+	mysql> insert into student values(1, "Krupa", "TY", 98.87, 22);
+	Query OK, 1 row affected (0.18 sec)
+	
+	mysql> insert into student values(2, "Krisha", "SY", 87.90, 21);
+	Query OK, 1 row affected (0.03 sec)
+	
+	mysql> insert into student values(3, "Nisha", "TY", 78.45, 22);
+	Query OK, 1 row affected (0.15 sec)
+	
+	mysql> insert into student values(4, "Nishant", "FY", 68.98, 20);
+	Query OK, 1 row affected (0.10 sec)
+	
+	mysql> insert into student values(5, "Krishna", "FY", 86.56, 21);
+	Query OK, 1 row affected (0.01 sec)
+
+
+Delete the entry of roll number 4 
+	mysql> delete from student where roll = 4;
+	Query OK, 1 row affected (0.13 sec)
+
+Update the marks of roll number 3
+	mysql> update student set marks = 87.23 where roll = 3;
+	Query OK, 1 row affected (0.02 sec)
+	Rows matched: 1  Changed: 1  Warnings: 0
+
+Give additional grace marks of 0.5 to all students. 
+	mysql> update student set marks = marks + 0.5;
+	Query OK, 4 rows affected (0.14 sec)
+	Rows matched: 4  Changed: 4  Warnings: 0
+
+Truncate the table	
+	mysql> truncate table student;
+	Query OK, 0 rows affected (0.21 sec)
+	
+
+Insert the data again using multi-insert statement.
+	mysql> insert into student values(1, "Kavya", "FY", 89.77, 20),(2, "Jeel", "SY", 76.45, 21),(3, "Rahul", "FY", 67.84, 20),(4, "Avani", "TY",65.39, 22),(5, "Mohan", "SY", 65.42, 21);
+	Query OK, 5 rows affected (0.02 sec)
+	Records: 5  Duplicates: 0  Warnings: 0
+
