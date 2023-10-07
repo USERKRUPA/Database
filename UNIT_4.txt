@@ -1,0 +1,761 @@
+UNIT 4: Displaying Data from Multiple Tables 
+mysql> select sysdate();
++---------------------+
+| sysdate()           |
++---------------------+
+| 2023-10-07 22:10:34 |
++---------------------+
+1 row in set (0.00 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| b1db               |
+| cdacdb             |
+| college            |
+| information_schema |
+| mysql              |
+| performance_schema |
+| pgdac              |
+| pgdacb2            |
+| pgdacdb            |
+| sys                |
++--------------------+
+10 rows in set (0.01 sec)
+
+mysql> use pgdacdb;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> 
+
+mysql> show tables;
++-------------------+
+| Tables_in_pgdacdb |
++-------------------+
+| custtbl           |
+| dept              |
+| emp               |
++-------------------+
+3 rows in set (0.00 sec)
+
+mysql> desc emp;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| empid     | int         | NO   | PRI | NULL    |       |
+| empname   | varchar(10) | YES  |     | NULL    |       |
+| empadd    | varchar(20) | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
+| hiredate  | date        | YES  |     | NULL    |       |
+| managerid | int         | YES  |     | NULL    |       |
+| deptid    | int         | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+7 rows in set (0.01 sec)
+
+mysql> desc dept;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| dname     | varchar(20) | YES  |     | NULL    |       |
+| managerid | int         | YES  |     | NULL    |       |
+| deptid    | int         | NO   | PRI | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.01 sec)
+
+mysql> select * from emp;
+Empty set (0.00 sec)
+
+mysql> insert into emp values(1, 'Krupa', 'Jetpur', 80000, '2024-03-05', 101, 10);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`pgdacdb`.`emp`, CONSTRAINT `fkemp` FOREIGN KEY (`deptid`) REFERENCES `dept` (`deptid`))
+mysql> select * from dept;
+Empty set (0.00 sec)
+
+mysql> insert into dept values('IT support', 101, 10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into dept values('Operations', 102, 20);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into dept values('Insurance', 103, 30);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into dept values('Maintenance', 104, 40);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into emp values(1, 'Krupa', 'Jetpur', 80000, '2024-03-05', 101, 10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(2, 'Krisha', 'Mumbai', 60000, '2024-03-05', 102, 20);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(3, 'Sakshi', 'Mumbai', 80000, '2024-03-05', 101, 10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(4, 'Shivani', 'Mumbai', 70000, '2024-03-05', 103, 30);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(5, 'Shalini', 'Banglore', 60000, '2024-03-05', 101, 10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> clear
+mysql> 
+mysql> select * from emp;
++-------+---------+----------+--------+------------+-----------+--------+
+| empid | empname | empadd   | salary | hiredate   | managerid | deptid |
++-------+---------+----------+--------+------------+-----------+--------+
+|     1 | Krupa   | Jetpur   |  80000 | 2024-03-05 |       101 |     10 |
+|     2 | Krisha  | Mumbai   |  60000 | 2024-03-05 |       102 |     20 |
+|     3 | Sakshi  | Mumbai   |  80000 | 2024-03-05 |       101 |     10 |
+|     4 | Shivani | Mumbai   |  70000 | 2024-03-05 |       103 |     30 |
+|     5 | Shalini | Banglore |  60000 | 2024-03-05 |       101 |     10 |
++-------+---------+----------+--------+------------+-----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> select * from dept;
++-------------+-----------+--------+
+| dname       | managerid | deptid |
++-------------+-----------+--------+
+| IT support  |       101 |     10 |
+| Operations  |       102 |     20 |
+| Insurance   |       103 |     30 |
+| Maintenance |       104 |     40 |
++-------------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> insert into emp values(6, 'Mohini', 'Pune', 50000, '2024-03-05', NULL, NULL);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select empname, dname
+    -> from emp e,
+    -> dept d 
+    -> where e.deptid = d.deptid;
++---------+------------+
+| empname | dname      |
++---------+------------+
+| Krupa   | IT support |
+| Sakshi  | IT support |
+| Shalini | IT support |
+| Krisha  | Operations |
+| Shivani | Insurance  |
++---------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp;
++-------+---------+----------+--------+------------+-----------+--------+
+| empid | empname | empadd   | salary | hiredate   | managerid | deptid |
++-------+---------+----------+--------+------------+-----------+--------+
+|     1 | Krupa   | Jetpur   |  80000 | 2024-03-05 |       101 |     10 |
+|     2 | Krisha  | Mumbai   |  60000 | 2024-03-05 |       102 |     20 |
+|     3 | Sakshi  | Mumbai   |  80000 | 2024-03-05 |       101 |     10 |
+|     4 | Shivani | Mumbai   |  70000 | 2024-03-05 |       103 |     30 |
+|     5 | Shalini | Banglore |  60000 | 2024-03-05 |       101 |     10 |
+|     6 | Mohini  | Pune     |  50000 | 2024-03-05 |      NULL |   NULL |
++-------+---------+----------+--------+------------+-----------+--------+
+6 rows in set (0.01 sec)
+
+mysql> select empname, dname
+    -> from emp e left join dept d
+    -> where e.deptid = d.deptid;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where e.deptid = d.deptid' at line 3
+mysql> select empname, dname
+    -> from emp e left join dept d
+    -> on e.deptid = d.deptid;
++---------+------------+
+| empname | dname      |
++---------+------------+
+| Krupa   | IT support |
+| Krisha  | Operations |
+| Sakshi  | IT support |
+| Shivani | Insurance  |
+| Shalini | IT support |
+| Mohini  | NULL       |
++---------+------------+
+6 rows in set (0.01 sec)
+
+mysql> select empname, dname
+    -> from emp e right join dept d
+    -> on e.deptid = d.deptid;
++---------+-------------+
+| empname | dname       |
++---------+-------------+
+| Krupa   | IT support  |
+| Sakshi  | IT support  |
+| Shalini | IT support  |
+| Krisha  | Operations  |
+| Shivani | Insurance   |
+| NULL    | Maintenance |
++---------+-------------+
+6 rows in set (0.00 sec)
+
+mysql> select empname, dname
+    -> from emp e full outer join dept d
+    -> on e.deptid = d.deptid;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'full outer join dept d
+on e.deptid = d.deptid' at line 2
+mysql> select empname, dname
+    -> from emp e full outer join dept d
+    -> where e.deptid = d.deptid;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'full outer join dept d
+where e.deptid = d.deptid' at line 2
+mysql> select empname, dname
+    -> from emp e cross join dept d
+    -> where e.deptid = d.deptid;
++---------+------------+
+| empname | dname      |
++---------+------------+
+| Krupa   | IT support |
+| Sakshi  | IT support |
+| Shalini | IT support |
+| Krisha  | Operations |
+| Shivani | Insurance  |
++---------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select empname, dname
+    -> from emp e cross join dept d
+    -> on e.deptid = d.deptid;
++---------+------------+
+| empname | dname      |
++---------+------------+
+| Krupa   | IT support |
+| Sakshi  | IT support |
+| Shalini | IT support |
+| Krisha  | Operations |
+| Shivani | Insurance  |
++---------+------------+
+5 rows in set (0.00 sec)
+
+mysql> 
+mysql> select * from emp;
++-------+---------+----------+--------+------------+-----------+--------+
+| empid | empname | empadd   | salary | hiredate   | managerid | deptid |
++-------+---------+----------+--------+------------+-----------+--------+
+|     1 | Krupa   | Jetpur   |  80000 | 2024-03-05 |       101 |     10 |
+|     2 | Krisha  | Mumbai   |  60000 | 2024-03-05 |       102 |     20 |
+|     3 | Sakshi  | Mumbai   |  80000 | 2024-03-05 |       101 |     10 |
+|     4 | Shivani | Mumbai   |  70000 | 2024-03-05 |       103 |     30 |
+|     5 | Shalini | Banglore |  60000 | 2024-03-05 |       101 |     10 |
+|     6 | Mohini  | Pune     |  50000 | 2024-03-05 |      NULL |   NULL |
++-------+---------+----------+--------+------------+-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> update emp set empid = 102 where empid = 1;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update emp set managerid = NULL  where empid = 101;
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> update emp set managerid = NULL  where empid = 102;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from emp;
++-------+---------+----------+--------+------------+-----------+--------+
+| empid | empname | empadd   | salary | hiredate   | managerid | deptid |
++-------+---------+----------+--------+------------+-----------+--------+
+|     2 | Krisha  | Mumbai   |  60000 | 2024-03-05 |       102 |     20 |
+|     3 | Sakshi  | Mumbai   |  80000 | 2024-03-05 |       101 |     10 |
+|     4 | Shivani | Mumbai   |  70000 | 2024-03-05 |       103 |     30 |
+|     5 | Shalini | Banglore |  60000 | 2024-03-05 |       101 |     10 |
+|     6 | Mohini  | Pune     |  50000 | 2024-03-05 |      NULL |   NULL |
+|   102 | Krupa   | Jetpur   |  80000 | 2024-03-05 |      NULL |     10 |
++-------+---------+----------+--------+------------+-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> update emp set empid = 1  where empid = 102;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update emp set empid = empid +100;
+Query OK, 6 rows affected (0.01 sec)
+Rows matched: 6  Changed: 6  Warnings: 0
+
+mysql> select * from emp;
++-------+---------+----------+--------+------------+-----------+--------+
+| empid | empname | empadd   | salary | hiredate   | managerid | deptid |
++-------+---------+----------+--------+------------+-----------+--------+
+|   101 | Krupa   | Jetpur   |  80000 | 2024-03-05 |      NULL |     10 |
+|   102 | Krisha  | Mumbai   |  60000 | 2024-03-05 |       102 |     20 |
+|   103 | Sakshi  | Mumbai   |  80000 | 2024-03-05 |       101 |     10 |
+|   104 | Shivani | Mumbai   |  70000 | 2024-03-05 |       103 |     30 |
+|   105 | Shalini | Banglore |  60000 | 2024-03-05 |       101 |     10 |
+|   106 | Mohini  | Pune     |  50000 | 2024-03-05 |      NULL |   NULL |
++-------+---------+----------+--------+------------+-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> update emp set managerid = 103  where empid = 102;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from emp;
++-------+---------+----------+--------+------------+-----------+--------+
+| empid | empname | empadd   | salary | hiredate   | managerid | deptid |
++-------+---------+----------+--------+------------+-----------+--------+
+|   101 | Krupa   | Jetpur   |  80000 | 2024-03-05 |      NULL |     10 |
+|   102 | Krisha  | Mumbai   |  60000 | 2024-03-05 |       103 |     20 |
+|   103 | Sakshi  | Mumbai   |  80000 | 2024-03-05 |       101 |     10 |
+|   104 | Shivani | Mumbai   |  70000 | 2024-03-05 |       103 |     30 |
+|   105 | Shalini | Banglore |  60000 | 2024-03-05 |       101 |     10 |
+|   106 | Mohini  | Pune     |  50000 | 2024-03-05 |      NULL |   NULL |
++-------+---------+----------+--------+------------+-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select e.empname, m.empname
+    -> from emp e, emp m
+    -> where e.managerid = m.empid;
++---------+---------+
+| empname | empname |
++---------+---------+
+| Krisha  | Sakshi  |
+| Sakshi  | Krupa   |
+| Shivani | Sakshi  |
+| Shalini | Krupa   |
++---------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select e.empname, m.empname
+    -> from emp e, emp m
+    -> where e.hiredate < m.hiredate;
+Empty set (0.00 sec)
+
+mysql> select empname, dname
+    -> from emp e, emp m
+    -> ;
+ERROR 1052 (23000): Column 'empname' in field list is ambiguous
+mysql> from emp e, emp m
+mysql> select empname, dname
+    -> from emp e join emp m
+    -> where e.managerid = m.empid;
+ERROR 1052 (23000): Column 'empname' in field list is ambiguous
+mysql> where e.managerid = m.empid;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+mysql> select e.empname, e.dname
+    -> from emp e join emp m
+    -> where e.managerid = m.empid;
+ERROR 1054 (42S22): Unknown column 'e.dname' in 'field list'
+mysql> select e.empname, m.empname
+    -> from emp e join emp m
+    -> where e.managerid = m.empid;
++---------+---------+
+| empname | empname |
++---------+---------+
+| Krisha  | Sakshi  |
+| Sakshi  | Krupa   |
+| Shivani | Sakshi  |
+| Shalini | Krupa   |
++---------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select e.empname, m.empname
+    -> from emp e cross join emp m
+    -> where e.managerid = m.empid;
++---------+---------+
+| empname | empname |
++---------+---------+
+| Krisha  | Sakshi  |
+| Sakshi  | Krupa   |
+| Shivani | Sakshi  |
+| Shalini | Krupa   |
++---------+---------+
+4 rows in set (0.00 sec)
+
+mysql> 
+
+mysql> desc emp;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| empid     | int         | NO   | PRI | NULL    |       |
+| empname   | varchar(10) | YES  |     | NULL    |       |
+| empadd    | varchar(20) | YES  |     | NULL    |       |
+| salary    | int         | YES  |     | NULL    |       |
+| hiredate  | date        | YES  |     | NULL    |       |
+| managerid | int         | YES  |     | NULL    |       |
+| deptid    | int         | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+7 rows in set (0.01 sec)
+
+mysql> desc dept;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| dname     | varchar(20) | YES  |     | NULL    |       |
+| managerid | int         | YES  |     | NULL    |       |
+| deptid    | int         | NO   | PRI | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select e.empname, e.deptid, d.dname
+    -> from emp e, dept d
+    -> where e.deptid = d.deptid;
++---------+--------+------------+
+| empname | deptid | dname      |
++---------+--------+------------+
+| Krupa   |     10 | IT support |
+| Sakshi  |     10 | IT support |
+| Shalini |     10 | IT support |
+| Krisha  |     20 | Operations |
+| Shivani |     30 | Insurance  |
++---------+--------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp;
++-------+---------+----------+--------+------------+-----------+--------+
+| empid | empname | empadd   | salary | hiredate   | managerid | deptid |
++-------+---------+----------+--------+------------+-----------+--------+
+|   101 | Krupa   | Jetpur   |  80000 | 2024-03-05 |      NULL |     10 |
+|   102 | Krisha  | Mumbai   |  60000 | 2024-03-05 |       103 |     20 |
+|   103 | Sakshi  | Mumbai   |  80000 | 2024-03-05 |       101 |     10 |
+|   104 | Shivani | Mumbai   |  70000 | 2024-03-05 |       103 |     30 |
+|   105 | Shalini | Banglore |  60000 | 2024-03-05 |       101 |     10 |
+|   106 | Mohini  | Pune     |  50000 | 2024-03-05 |      NULL |   NULL |
++-------+---------+----------+--------+------------+-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select * from dept;
++-------------+-----------+--------+
+| dname       | managerid | deptid |
++-------------+-----------+--------+
+| IT support  |       101 |     10 |
+| Operations  |       102 |     20 |
+| Insurance   |       103 |     30 |
+| Maintenance |       104 |     40 |
++-------------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> select e.empid,e.name,e.empadd,d.dname
+    -> from emp e , dept d 
+    -> where e.deptid = d.deptid;
+ERROR 1054 (42S22): Unknown column 'e.name' in 'field list'
+mysql> select e.empid,e.empname,e.empadd,d.dname
+    -> from emp e , dept d
+    -> where e.deptid = d.deptid;
++-------+---------+----------+------------+
+| empid | empname | empadd   | dname      |
++-------+---------+----------+------------+
+|   101 | Krupa   | Jetpur   | IT support |
+|   103 | Sakshi  | Mumbai   | IT support |
+|   105 | Shalini | Banglore | IT support |
+|   102 | Krisha  | Mumbai   | Operations |
+|   104 | Shivani | Mumbai   | Insurance  |
++-------+---------+----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from emp;
++-------+---------+----------+--------+------------+-----------+--------+
+| empid | empname | empadd   | salary | hiredate   | managerid | deptid |
++-------+---------+----------+--------+------------+-----------+--------+
+|   101 | Krupa   | Jetpur   |  80000 | 2024-03-05 |      NULL |     10 |
+|   102 | Krisha  | Mumbai   |  60000 | 2024-03-05 |       103 |     20 |
+|   103 | Sakshi  | Mumbai   |  80000 | 2024-03-05 |       101 |     10 |
+|   104 | Shivani | Mumbai   |  70000 | 2024-03-05 |       103 |     30 |
+|   105 | Shalini | Banglore |  60000 | 2024-03-05 |       101 |     10 |
+|   106 | Mohini  | Pune     |  50000 | 2024-03-05 |      NULL |   NULL |
++-------+---------+----------+--------+------------+-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select * from dept;
++-------------+-----------+--------+
+| dname       | managerid | deptid |
++-------------+-----------+--------+
+| IT support  |       101 |     10 |
+| Operations  |       102 |     20 |
+| Insurance   |       103 |     30 |
+| Maintenance |       104 |     40 |
++-------------+-----------+--------+
+4 rows in set (0.00 sec)
+
+mysql> update emp set deptid = 40 where empid =106;
+Query OK, 1 row affected (0.01 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from emp;
++-------+---------+----------+--------+------------+-----------+--------+
+| empid | empname | empadd   | salary | hiredate   | managerid | deptid |
++-------+---------+----------+--------+------------+-----------+--------+
+|   101 | Krupa   | Jetpur   |  80000 | 2024-03-05 |      NULL |     10 |
+|   102 | Krisha  | Mumbai   |  60000 | 2024-03-05 |       103 |     20 |
+|   103 | Sakshi  | Mumbai   |  80000 | 2024-03-05 |       101 |     10 |
+|   104 | Shivani | Mumbai   |  70000 | 2024-03-05 |       103 |     30 |
+|   105 | Shalini | Banglore |  60000 | 2024-03-05 |       101 |     10 |
+|   106 | Mohini  | Pune     |  50000 | 2024-03-05 |      NULL |     40 |
++-------+---------+----------+--------+------------+-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> update emp set managerid = 104 where empid =106;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from emp;
++-------+---------+----------+--------+------------+-----------+--------+
+| empid | empname | empadd   | salary | hiredate   | managerid | deptid |
++-------+---------+----------+--------+------------+-----------+--------+
+|   101 | Krupa   | Jetpur   |  80000 | 2024-03-05 |      NULL |     10 |
+|   102 | Krisha  | Mumbai   |  60000 | 2024-03-05 |       103 |     20 |
+|   103 | Sakshi  | Mumbai   |  80000 | 2024-03-05 |       101 |     10 |
+|   104 | Shivani | Mumbai   |  70000 | 2024-03-05 |       103 |     30 |
+|   105 | Shalini | Banglore |  60000 | 2024-03-05 |       101 |     10 |
+|   106 | Mohini  | Pune     |  50000 | 2024-03-05 |       104 |     40 |
++-------+---------+----------+--------+------------+-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select e.empname ,d.dname 
+    -> from emp e ,dept d
+    -> where e.deptid = d.deptid and e.empname like '%a%';
++---------+------------+
+| empname | dname      |
++---------+------------+
+| Krupa   | IT support |
+| Krisha  | Operations |
+| Sakshi  | IT support |
+| Shivani | Insurance  |
+| Shalini | IT support |
++---------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select e.empname , e.deptid ,d.dname 
+    -> from emp e ,dept d
+    -> where e.deptid = d.deptid and e.empadd = 'Mumbai';
++---------+--------+------------+
+| empname | deptid | dname      |
++---------+--------+------------+
+| Krisha  |     20 | Operations |
+| Sakshi  |     10 | IT support |
+| Shivani |     30 | Insurance  |
++---------+--------+------------+
+3 rows in set (0.00 sec)
+
+mysql> select e.empname, e.empid, e.managerid, m.empname
+    -> from emp e, emp m
+    -> where e.managerid = m.empid;
++---------+-------+-----------+---------+
+| empname | empid | managerid | empname |
++---------+-------+-----------+---------+
+| Krisha  |   102 |       103 | Sakshi  |
+| Sakshi  |   103 |       101 | Krupa   |
+| Shivani |   104 |       103 | Sakshi  |
+| Shalini |   105 |       101 | Krupa   |
+| Mohini  |   106 |       104 | Shivani |
++---------+-------+-----------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select e.empname as employee, e.empid as Emp#, e.managerid as Manager, m.empname as Mgr#
+    -> from emp e, emp m
+    -> where e.managerid = m.empid;
++----------+-----+
+| employee | Emp |
++----------+-----+
+| Krisha   | 102 |
+| Sakshi   | 103 |
+| Shivani  | 104 |
+| Shalini  | 105 |
+| Mohini   | 106 |
++----------+-----+
+5 rows in set (0.00 sec)
+
+mysql> select e.empname as employee, e.empid as Emp, e.managerid as Manager, m.empname as Mgr
+    -> from emp e, emp m
+    -> where e.managerid = m.empid;
++----------+-----+---------+---------+
+| employee | Emp | Manager | Mgr     |
++----------+-----+---------+---------+
+| Krisha   | 102 |     103 | Sakshi  |
+| Sakshi   | 103 |     101 | Krupa   |
+| Shivani  | 104 |     103 | Sakshi  |
+| Shalini  | 105 |     101 | Krupa   |
+| Mohini   | 106 |     104 | Shivani |
++----------+-----+---------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select e.empname as employee, e.empid as "Emp#", e.managerid as Manager, m.empname as "Mgr#"
+    -> from emp e, emp m
+    -> where e.managerid = m.empid;
++----------+------+---------+---------+
+| employee | Emp# | Manager | Mgr#    |
++----------+------+---------+---------+
+| Krisha   |  102 |     103 | Sakshi  |
+| Sakshi   |  103 |     101 | Krupa   |
+| Shivani  |  104 |     103 | Sakshi  |
+| Shalini  |  105 |     101 | Krupa   |
+| Mohini   |  106 |     104 | Shivani |
++----------+------+---------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select e.empname as employee, e.empid as "Emp#", e.managerid as Manager, m.empname as "Mgr#"
+    -> from emp e, emp m
+    -> where e.managerid = m.empid;
++----------+------+---------+---------+
+| employee | Emp# | Manager | Mgr#    |
++----------+------+---------+---------+
+| Krisha   |  102 |     103 | Sakshi  |
+| Sakshi   |  103 |     101 | Krupa   |
+| Shivani  |  104 |     103 | Sakshi  |
+| Shalini  |  105 |     101 | Krupa   |
+| Mohini   |  106 |     104 | Shivani |
++----------+------+---------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select e.empname as employee, e.empid as "Emp#", e.managerid as Manager, m.empname as "Mgr#"
+    -> from emp e left join emp m
+    -> where e.managerid = m.empid
+    -> order by e.empid;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where e.managerid = m.empid
+order by e.empid' at line 3
+mysql> select e.empname as employee, e.empid as "Emp#", e.managerid as Manager, m.empname as "Mgr#"
+    -> from emp e left join emp m
+    -> order by e.empid
+    -> where e.managerid = m.empid
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'order by e.empid
+where e.managerid = m.empid' at line 3
+mysql> select e.empname as employee, e.empid as "Emp#", e.managerid as Manager, m.empname as "Mgr#"
+    -> from emp e left join emp m
+    -> where e.managerid = m.empid;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where e.managerid = m.empid' at line 3
+mysql> select e.empname as employee, e.empid as "Emp#", e.managerid as Manager, m.empname as "Mgr#"
+    -> from emp as e left join emp as m
+    -> where e.managerid = m.empid;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where e.managerid = m.empid' at line 3
+mysql> select e.empname as employee, e.empid as "Emp#", e.managerid as Manager, m.empname as "Mgr#"
+    -> from emp as e, emp as m
+    -> where e.managerid = m.empid;
++----------+------+---------+---------+
+| employee | Emp# | Manager | Mgr#    |
++----------+------+---------+---------+
+| Krisha   |  102 |     103 | Sakshi  |
+| Sakshi   |  103 |     101 | Krupa   |
+| Shivani  |  104 |     103 | Sakshi  |
+| Shalini  |  105 |     101 | Krupa   |
+| Mohini   |  106 |     104 | Shivani |
++----------+------+---------+---------+
+5 rows in set (0.01 sec)
+
+mysql> select e.empname as employee, e.empid as "Emp#", e.managerid as Manager, m.empname as "Mgr#"
+    -> from emp as e left join emp as m
+    -> on e.managerid = m.empid
+    -> order by e.empid;
++----------+------+---------+---------+
+| employee | Emp# | Manager | Mgr#    |
++----------+------+---------+---------+
+| Krupa    |  101 |    NULL | NULL    |
+| Krisha   |  102 |     103 | Sakshi  |
+| Sakshi   |  103 |     101 | Krupa   |
+| Shivani  |  104 |     103 | Sakshi  |
+| Shalini  |  105 |     101 | Krupa   |
+| Mohini   |  106 |     104 | Shivani |
++----------+------+---------+---------+
+6 rows in set (0.00 sec)
+
+mysql> select e.deptid as dept,e.empname as name, c.empname as collegue
+    -> from emp e , emp c
+    -> where e.deptid = c.deptid;
++------+---------+----------+
+| dept | name    | collegue |
++------+---------+----------+
+|   10 | Krupa   | Krupa    |
+|   10 | Krupa   | Sakshi   |
+|   10 | Krupa   | Shalini  |
+|   20 | Krisha  | Krisha   |
+|   10 | Sakshi  | Krupa    |
+|   10 | Sakshi  | Sakshi   |
+|   10 | Sakshi  | Shalini  |
+|   30 | Shivani | Shivani  |
+|   10 | Shalini | Krupa    |
+|   10 | Shalini | Sakshi   |
+|   10 | Shalini | Shalini  |
+|   40 | Mohini  | Mohini   |
++------+---------+----------+
+12 rows in set (0.00 sec)
+
+mysql> select e.deptid as dept,e.empname as name, c.empname as collegue
+    -> from emp e , emp c
+    -> where e.deptid = c.deptid and e.empid <> c.empid;
++------+---------+----------+
+| dept | name    | collegue |
++------+---------+----------+
+|   10 | Krupa   | Sakshi   |
+|   10 | Krupa   | Shalini  |
+|   10 | Sakshi  | Krupa    |
+|   10 | Sakshi  | Shalini  |
+|   10 | Shalini | Krupa    |
+|   10 | Shalini | Sakshi   |
++------+---------+----------+
+6 rows in set (0.01 sec)
+
+mysql> select * from emp;
++-------+---------+----------+--------+------------+-----------+--------+
+| empid | empname | empadd   | salary | hiredate   | managerid | deptid |
++-------+---------+----------+--------+------------+-----------+--------+
+|   101 | Krupa   | Jetpur   |  80000 | 2024-03-05 |      NULL |     10 |
+|   102 | Krisha  | Mumbai   |  60000 | 2024-03-05 |       103 |     20 |
+|   103 | Sakshi  | Mumbai   |  80000 | 2024-03-05 |       101 |     10 |
+|   104 | Shivani | Mumbai   |  70000 | 2024-03-05 |       103 |     30 |
+|   105 | Shalini | Banglore |  60000 | 2024-03-05 |       101 |     10 |
+|   106 | Mohini  | Pune     |  50000 | 2024-03-05 |       104 |     40 |
++-------+---------+----------+--------+------------+-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> update emp set deptid = 20 where empid = 105;
+Query OK, 1 row affected (0.00 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from emp;
++-------+---------+----------+--------+------------+-----------+--------+
+| empid | empname | empadd   | salary | hiredate   | managerid | deptid |
++-------+---------+----------+--------+------------+-----------+--------+
+|   101 | Krupa   | Jetpur   |  80000 | 2024-03-05 |      NULL |     10 |
+|   102 | Krisha  | Mumbai   |  60000 | 2024-03-05 |       103 |     20 |
+|   103 | Sakshi  | Mumbai   |  80000 | 2024-03-05 |       101 |     10 |
+|   104 | Shivani | Mumbai   |  70000 | 2024-03-05 |       103 |     30 |
+|   105 | Shalini | Banglore |  60000 | 2024-03-05 |       101 |     20 |
+|   106 | Mohini  | Pune     |  50000 | 2024-03-05 |       104 |     40 |
++-------+---------+----------+--------+------------+-----------+--------+
+6 rows in set (0.00 sec)
+
+mysql> select e.deptid as dept,e.empname as name, c.empname as collegue
+    -> from emp e , emp c
+    -> where e.deptid = c.deptid and e.empid <> c.empid;
++------+---------+----------+
+| dept | name    | collegue |
++------+---------+----------+
+|   10 | Krupa   | Sakshi   |
+|   20 | Krisha  | Shalini  |
+|   10 | Sakshi  | Krupa    |
+|   20 | Shalini | Krisha   |
++------+---------+----------+
+4 rows in set (0.00 sec)
+
+mysql> 
+
+
