@@ -224,23 +224,13 @@ mysql> select LEFT(First_name, 4) from Employee;
 
 8. Get the position of the letter ‘h’ in ‘John’.
 mysql> select instr('John', 'h');
+//select instr(first_name, 'h') from Worker where first_name = "John";
 +--------------------+
 | instr('John', 'h') |
 +--------------------+
 |                  3 |
 +--------------------+
 1 row in set (0.00 sec)
-
- OR
-
-mysql> select find_in_set('h', 'J,o,h,n');
-+-----------------------------+
-| find_in_set('h', 'J,o,h,n') |
-+-----------------------------+
-|                           3 |
-+-----------------------------+
-1 row in set (0.00 sec)
- 
 
 9. Get all values from the “FIRST_NAME” column after removing white space on the right.
 mysql> select RTRIM(First_name) from Employee;
