@@ -132,6 +132,15 @@ mysql> select EmpName from Employee where EmpName like '%a';
 
 
 8. List the number of department of employees in each project.
+mysql> select ep.ProjectId, count(distinct(d.DeptId)) as "No of department", count(distinct(e.Empid)) as "no of emp" from Employee e, EmpProject ep, EmpDept d where e.Empid = ep.Empid and d.DeptId = e.Department group by ProjectId;
++-----------+------------------+-----------+
+| ProjectId | No of department | no of emp |
++-----------+------------------+-----------+
+| p-1       |                1 |         2 |
+| p-2       |                1 |         1 |
+| p-4       |                2 |         2 |
++-----------+------------------+-----------+
+3 rows in set (0.00 sec)
 
 9. How many project started in year 2010.
 mysql> select COUNT(ProjectId) as "Number of Project" from EmpProject where
